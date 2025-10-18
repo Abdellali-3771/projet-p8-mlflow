@@ -1,19 +1,13 @@
 import os
-from mlflow.server import main
+import mlflow.server
 
-# Crée les dossiers nécessaires
+# Crée le dossier local pour stocker les runs
 os.makedirs("mlruns", exist_ok=True)
 
-# Définit les arguments du serveur MLflow
-args = [
-    "mlflow",
-    "server",
-    "--host", "0.0.0.0",
-    "--port", "5001",
-    "--backend-store-uri", "sqlite:///mlflow.db",
-    "--default-artifact-root", "./mlruns"
-]
-
-# Lance MLflow directement via Python
+# Démarre le serveur MLflow en Python pur (pas de commande shell)
 if __name__ == "__main__":
-    main(args)
+    from mlflow.server import app
+    from waitress import serve  # waitress = serveur web stable pour Python
+    
+    print("🚀 Démarrage du serveur MLflow sur http://0.0.0.0:5001 ...")
+    serve(app, host="0.0.0.0", port=5001)
